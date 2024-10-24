@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ reteta.title }}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>{{ reteta.title }}</h1>
+        <p><strong>Categorie:</strong> {{ reteta.categorie.name }}</p>
+        <p><strong>Descriere:</strong> {{ reteta.descriere }}</p>
+        <p><strong>Ingrediente:</strong> {{ reteta.incrediente }}</p>
+        <p><strong>Instructiuni:</strong> {{ reteta.instructiuni }}</p>
+        <p><strong>Creată de:</strong> {{ reteta.user.username }} pe {{ reteta.created_at|date:"d M Y H:i" }}</p>
+
+        {% if reteta.imagine %}
+        <img src="{{ reteta.imagine.url }}" alt="{{ reteta.title }}" class="img-fluid" width="300" height="200">
+        <p></p>
+        {% endif%}
+        <p></p>
+        <a href="{% url 'vizualizare_retete' %}" class="btn btn-primary">Înapoi la rețete</a>
+    </div>
+</body>
+</html>

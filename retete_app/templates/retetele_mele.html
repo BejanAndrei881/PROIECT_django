@@ -1,0 +1,65 @@
+{% extends "retete.html"%}
+
+{% block page_head %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rețetele Mele</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Rețetele Mele</h1>
+
+
+        <form method="GET" class="mb-4">
+            <div class="form-group">
+                <label for="categorie">Selectează o categorie:</label>
+                <select name="categorie" id="categorie" class="form-control" onchange="this.form.submit()">
+                    <option value="">Toate Categoriile</option>
+                    {% for categorie in categorii %}
+                        <option value="{{ categorie.id }}" {% if selected_category == categorie.id %}selected{% endif %}>
+                            {{ categorie.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </form>
+
+
+        {% if private_recipes %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Titlu</th>
+                <th>Data creării</th>
+                <th>Categorie</th>
+                <th>Acțiuni</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for recipe in private_recipes %}
+                <tr>
+                    <td><a href="{% url 'detali_reteta' recipe.pk %}">{{ recipe.title }}</a></td>
+                    <td>{{ recipe.created_at }}</td>
+                    <td>{{ recipe.categorie }}</td>
+                    <td>
+
+                        <form method="post" action="{% url 'sterge_reteta_privata' recipe.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm">Șterge</button>
+                        </form>
+
+                        <a href="{% url 'edita_reteta' recipe.id %}" class="btn btn-warning btn-sm">Editează</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>Nu ai nicio rețetă proprie momentan.</p>
+{% endif %}
+
+    </div>
+</body>
+{% endblock%}

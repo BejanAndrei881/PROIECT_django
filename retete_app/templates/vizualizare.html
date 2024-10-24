@@ -1,0 +1,76 @@
+{% extends "retete.html"%}
+
+{% block page_head%}
+
+
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vizualizare Rețete</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Vizualizare Rețete</h1>
+
+
+        <form method="GET" class="mb-4">
+            <div class="form-group">
+                <label for="categorie">Selectează o categorie:</label>
+                <select name="categorie" id="categorie" class="form-control" onchange="this.form.submit()">
+                    <option value="">Toate Categoriile</option>
+                    {% for categorie in categorii %}
+                        <option value="{{ categorie.id }}" {% if selected_category == categorie.id %}selected{% endif %}>
+                            {{ categorie.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </form>
+
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Titlu</th>
+                    <th>Scris de</th>
+                    <th>Data postării</th>
+                    <th>Categorie</th>
+                    <th>Acțiune</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for recipe in recipes %}
+                <tr>
+                    <td><a href="{% url 'detali_reteta' recipe.pk %}">{{ recipe.title }}</a></td>
+                    <td>{{ recipe.user.username }}</td>
+                    <td>{{ recipe.created_at|date:"d M Y H:i" }}</td>
+                    <td>{{ recipe.categorie.name }}</td>
+                    <td>
+                        {% if recipe.id in saved_recipes %}
+                            <span class="text-success">Rețetă salvată</span>
+                        {% else %}
+                            <form action="{% url 'salveaza_reteta' recipe.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary">Salvează</button>
+                            </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% if recipes.count == 0 %}
+            <p class="text-center">Nu există rețete disponibile în această categorie.</p>
+        {% endif %}
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+{% endblock %}

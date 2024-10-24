@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acasă - Aplicație de Rețete</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="{% url 'home' %}">LOGO</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'home' %}">Acasă</a>
+                </li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="nav-link btn btn-link">Logout</button>
+                        </form>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Login</a>
+                    </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'vizualizare_retete' %}">Vizualizează rețete</a>
+                </li>
+                <li class="nav-item">
+                    {% if user.is_authenticated %}
+                        <a class="nav-link" href="{% url 'adauga_reteta' %}">Adaugă rețetă</a>
+                    {% else %}
+                        <a class="nav-link" href="{% url 'login' %}?next={% url 'adauga_reteta' %}">Adaugă rețetă</a>
+                    {% endif %}
+                </li>
+                <li class="nav-item">
+                    {% if user.is_authenticated %}
+                        <a class="nav-link" href="{% url 'reteta_salvata' %}">Rețete Salvate</a>
+                    {% else %}
+                        <a class="nav-link" href="{% url 'login' %}?next={% url 'reteta_salvata' %}">Rețete Salvate</a>
+                    {% endif %}
+                </li>
+                <li class="nav-item">
+                    {% if user.is_authenticated %}
+                        <a class="nav-link" href="{% url 'retetele_mele' %}">Rețetele mele</a>
+                    {% else %}
+                        <a class="nav-link" href="{% url 'login' %}?next={% url 'retetele_mele' %}">Rețetele mele</a>
+                    {% endif %}
+                </li>
+            </ul>
+        </div>
+    </nav>
+	{% block page_head %}
+
+    <header class="container text-center my-5">
+        <h1>Rețete pe gustul tuturor!</h1>
+        <p>Descoperă și împărtășește rețete delicioase</p>
+    </header>
+
+
+<!--    <div class="container">-->
+<!--        <form class="form-inline justify-content-center" method="GET" action="{% url 'home' %}">-->
+<!--            <input class="form-control mr-sm-2" type="search" name="search" placeholder="Caută rețete..." aria-label="Search" value="{{ search_query }}">-->
+<!--            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Caută</button>-->
+<!--        </form>-->
+<!--    </div>-->
+
+
+<!--    <div class="container mt-4">-->
+<!--        {% if recipes %}-->
+<!--            <h2>Rezultatele căutării:</h2>-->
+<!--            <table class="table">-->
+<!--                <thead>-->
+<!--                    <tr>-->
+<!--                        <th>Titlu</th>-->
+<!--                        <th>Scris de</th>-->
+<!--                        <th>Data postării</th>-->
+<!--                    </tr>-->
+<!--                </thead>-->
+<!--                <tbody>-->
+<!--                    {% for recipe in recipes %}-->
+<!--                        <tr>-->
+<!--                            <td><a href="{% url 'detali_reteta' recipe.pk %}">{{ recipe.title }}</a></td>-->
+<!--                            <td>{{ recipe.user.username }}</td>-->
+<!--                            <td>{{ recipe.created_at|date:"d M Y H:i" }}</td>-->
+<!--                        </tr>-->
+<!--                    {% endfor %}-->
+<!--                </tbody>-->
+<!--            </table>-->
+<!--        {% else %}-->
+<!--            <p>Nu au fost găsite rețete care să corespundă termenului de căutare.</p>-->
+<!--        {% endif %}-->
+<!--    </div>-->
+{% endblock %}
+</body>
+</html>

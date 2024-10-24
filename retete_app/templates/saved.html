@@ -1,0 +1,66 @@
+{% extends "retete.html"%}
+
+
+{% block page_head%}
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rețete Salvate și Rețetele Mele</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Rețete Salvate</h1>
+
+
+        <form method="GET" class="mb-4">
+            <div class="form-group">
+                <label for="categorie">Selectează o categorie:</label>
+                <select name="categorie" id="categorie" class="form-control" onchange="this.form.submit()">
+                    <option value="">Toate Categoriile</option>
+                    {% for categorie in categorii %}
+                        <option value="{{ categorie.id }}" {% if selected_category == categorie.id %}selected{% endif %}>
+                            {{ categorie.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </form>
+
+
+        {% if saved_recipes %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Titlu</th>
+                    <th>Scrisă de</th>
+                    <th>Categorie</th>
+                    <th>Acțiuni</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for saved_recipe in saved_recipes %}
+                <tr>
+                    <td><a href="{% url 'detali_reteta' saved_recipe.recipe.pk %}">{{ saved_recipe.recipe.title }}</a></td>
+                    <td>{{ saved_recipe.recipe.user.username }}</td>
+                    <td>{{ saved_recipe.recipe.categorie.name }}</td>
+                    <td>
+
+                        <form method="post" action="{% url 'sterge_reteta' saved_recipe.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm">Șterge</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>Nu ai nicio rețetă salvată momentan.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
+{% endblock %}
+
